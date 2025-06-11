@@ -20,7 +20,7 @@ export default function Projects() {
       category: "Backend",
       duration: "May 2025 - Jun 2025",
       github: "https://github.com/Muskan3909/book-review-api",
-      demo: "#"
+     
     },
     {
       title: "COVID-19 Predictor",
@@ -30,7 +30,7 @@ export default function Projects() {
       category: "AI/ML",
       duration: "Mar 2023 - Nov 2023",
       github: "https://github.com/Muskan3909/covid-predication-system",
-      demo: "#"
+      
     },
     {
       title: "Hospital Management System",
@@ -40,7 +40,7 @@ export default function Projects() {
       category: "Full-Stack",
       duration: "Feb 2022 - Sep 2022",
       github: "https://github.com/Muskan3909/HOSPITAL-MANAGEMENT-SYSTEM",
-      demo: "#"
+      
     }
   ];
 

@@ -9,9 +9,9 @@ export default function Hero() {
   const fullText = "Hi, I'm Muskan";
   const roles = [
     "Software Developer",
-    "Full Stack Developer",
+    "Full Stack Developer", 
     "Backend Developer",
-    "DevOps Engineer",
+    "DevOps Engineer"
   ];
 
   useEffect(() => {
@@ -29,29 +29,29 @@ export default function Hero() {
   }, []);
 
   useEffect(() => {
-    let typeTimer: NodeJS.Timeout;
-    let deleteTimer: NodeJS.Timeout;
-
     const typeRole = () => {
       const currentRole = roles[currentRoleIndex];
       let i = 0;
-
-      typeTimer = setInterval(() => {
+      
+      // Clear current role text
+      setRoleText("");
+      
+      const typeTimer = setInterval(() => {
         if (i < currentRole.length) {
-          setRoleText((prev) => prev + currentRole[i]);
+          setRoleText(currentRole.slice(0, i + 1));
           i++;
         } else {
           clearInterval(typeTimer);
-
-          // Wait 2 seconds before deleting
+          // Wait 2 seconds before starting to delete
           setTimeout(() => {
             let j = currentRole.length;
-            deleteTimer = setInterval(() => {
+            const deleteTimer = setInterval(() => {
               if (j > 0) {
-                setRoleText((prev) => prev.slice(0, j - 1));
+                setRoleText(currentRole.slice(0, j - 1));
                 j--;
               } else {
                 clearInterval(deleteTimer);
+                // Move to next role
                 setCurrentRoleIndex((prev) => (prev + 1) % roles.length);
               }
             }, 50);
@@ -60,13 +60,45 @@ export default function Hero() {
       }, 100);
     };
 
-    typeRole();
+    // Start typing roles after name is typed
+    const startRoleTyping = setTimeout(() => {
+      typeRole();
+    }, fullText.length * 100 + 500);
 
-    return () => {
-      clearInterval(typeTimer);
-      clearInterval(deleteTimer);
-    };
+    return () => clearTimeout(startRoleTyping);
   }, [currentRoleIndex]);
+
+  useEffect(() => {
+    if (roleText === "" && currentRoleIndex > 0) {
+      // Small delay before typing next role
+      const nextRoleTimer = setTimeout(() => {
+        const currentRole = roles[currentRoleIndex];
+        let i = 0;
+        const typeTimer = setInterval(() => {
+          if (i < currentRole.length) {
+            setRoleText(currentRole.slice(0, i + 1));
+            i++;
+          } else {
+            clearInterval(typeTimer);
+            setTimeout(() => {
+              let j = currentRole.length;
+              const deleteTimer = setInterval(() => {
+                if (j > 0) {
+                  setRoleText(currentRole.slice(0, j - 1));
+                  j--;
+                } else {
+                  clearInterval(deleteTimer);
+                  setCurrentRoleIndex((prev) => (prev + 1) % roles.length);
+                }
+              }, 50);
+            }, 2000);
+          }
+        }, 100);
+      }, 500);
+
+      return () => clearTimeout(nextRoleTimer);
+    }
+  }, [roleText, currentRoleIndex]);
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -76,19 +108,16 @@ export default function Hero() {
   };
 
   return (
-    <section
-      id="home"
-      className="min-h-screen flex items-center justify-center relative overflow-hidden"
-    >
+    <section id="home" className="min-h-screen flex items-center justify-center relative overflow-hidden">
       {/* Background tech workspace image */}
       <div className="absolute inset-0 opacity-10">
-        <img
-          src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1920&h=1080"
-          alt="Professional tech workspace"
+        <img 
+          src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1920&h=1080" 
+          alt="Professional tech workspace" 
           className="w-full h-full object-cover"
         />
       </div>
-
+      
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div className="text-center md:text-left animate-slideInLeft">
@@ -96,23 +125,21 @@ export default function Hero() {
               {typedText} <span className="text-[#22D3EE]">👋</span>
             </h1>
             <h2 className="text-xl md:text-2xl text-[#64748B] mb-6 h-8">
-              {roleText}
-              <span className="animate-pulse">|</span>
+              {roleText}<span className="animate-pulse">|</span>
             </h2>
             <p className="text-lg mb-8 max-w-lg">
-              B.E. Computer Science graduate (2024) with hands-on experience in
-              backend systems, distributed architecture, scalable API design,
-              and DevOps fundamentals. Proficient in Java, Python, and shell
-              scripting with strong debugging and system troubleshooting skills.
+              B.E. Computer Science graduate (2024) with hands-on experience in backend systems, distributed architecture, 
+              scalable API design, and DevOps fundamentals. Proficient in Java, Python, and shell scripting with strong 
+              debugging and system troubleshooting skills.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-              <button
+              <button 
                 onClick={() => scrollToSection("contact")}
                 className="bg-[#22D3EE] text-[#0F172A] px-8 py-3 rounded-lg font-semibold hover:bg-[#22D3EE]/90 transition-all duration-300 glow-effect"
               >
                 Get In Touch
               </button>
-              <button
+              <button 
                 onClick={() => scrollToSection("projects")}
                 className="border border-[#22D3EE] text-[#22D3EE] px-8 py-3 rounded-lg font-semibold hover:bg-[#22D3EE] hover:text-[#0F172A] transition-all duration-300"
               >
@@ -120,13 +147,13 @@ export default function Hero() {
               </button>
             </div>
           </div>
-
+          
           <div className="flex justify-center animate-slideInRight">
             <div className="relative">
               <div className="w-80 h-80 rounded-full overflow-hidden border-4 border-[#22D3EE] glow-effect">
-                <img
-                  src={profileImage}
-                  alt="Muskan Kushwaha"
+                <img 
+                  src={profileImage} 
+                  alt="Muskan Kushwaha" 
                   className="w-full h-full object-cover"
                 />
               </div>

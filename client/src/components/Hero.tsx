@@ -6,6 +6,9 @@ export default function Hero() {
   const [typedText, setTypedText] = useState("");
   const [roleText, setRoleText] = useState("");
   const [currentRoleIndex, setCurrentRoleIndex] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [nameTypingComplete, setNameTypingComplete] = useState(false);
+  
   const fullText = "Hi, I'm Muskan";
   const roles = [
     "Software Developer",
@@ -14,6 +17,7 @@ export default function Hero() {
     "DevOps Engineer"
   ];
 
+  // Type the name once
   useEffect(() => {
     let i = 0;
     const timer = setInterval(() => {
@@ -22,83 +26,47 @@ export default function Hero() {
         i++;
       } else {
         clearInterval(timer);
+        setNameTypingComplete(true);
       }
     }, 100);
 
     return () => clearInterval(timer);
   }, []);
 
+  // Handle role typing and cycling
   useEffect(() => {
-    const typeRole = () => {
-      const currentRole = roles[currentRoleIndex];
-      let i = 0;
-      
-      // Clear current role text
-      setRoleText("");
-      
-      const typeTimer = setInterval(() => {
-        if (i < currentRole.length) {
-          setRoleText(currentRole.slice(0, i + 1));
-          i++;
-        } else {
-          clearInterval(typeTimer);
-          // Wait 2 seconds before starting to delete
-          setTimeout(() => {
-            let j = currentRole.length;
-            const deleteTimer = setInterval(() => {
-              if (j > 0) {
-                setRoleText(currentRole.slice(0, j - 1));
-                j--;
-              } else {
-                clearInterval(deleteTimer);
-                // Move to next role
-                setCurrentRoleIndex((prev) => (prev + 1) % roles.length);
-              }
-            }, 50);
-          }, 2000);
-        }
-      }, 100);
-    };
+    if (!nameTypingComplete) return;
 
-    // Start typing roles after name is typed
-    const startRoleTyping = setTimeout(() => {
-      typeRole();
-    }, fullText.length * 100 + 500);
+    const currentRole = roles[currentRoleIndex];
+    let timer;
 
-    return () => clearTimeout(startRoleTyping);
-  }, [currentRoleIndex]);
-
-  useEffect(() => {
-    if (roleText === "" && currentRoleIndex > 0) {
-      // Small delay before typing next role
-      const nextRoleTimer = setTimeout(() => {
-        const currentRole = roles[currentRoleIndex];
-        let i = 0;
-        const typeTimer = setInterval(() => {
-          if (i < currentRole.length) {
-            setRoleText(currentRole.slice(0, i + 1));
-            i++;
-          } else {
-            clearInterval(typeTimer);
-            setTimeout(() => {
-              let j = currentRole.length;
-              const deleteTimer = setInterval(() => {
-                if (j > 0) {
-                  setRoleText(currentRole.slice(0, j - 1));
-                  j--;
-                } else {
-                  clearInterval(deleteTimer);
-                  setCurrentRoleIndex((prev) => (prev + 1) % roles.length);
-                }
-              }, 50);
-            }, 2000);
-          }
+    if (!isDeleting) {
+      // Typing phase
+      if (roleText.length < currentRole.length) {
+        timer = setTimeout(() => {
+          setRoleText(currentRole.slice(0, roleText.length + 1));
         }, 100);
-      }, 500);
-
-      return () => clearTimeout(nextRoleTimer);
+      } else {
+        // Wait before starting to delete
+        timer = setTimeout(() => {
+          setIsDeleting(true);
+        }, 2000);
+      }
+    } else {
+      // Deleting phase
+      if (roleText.length > 0) {
+        timer = setTimeout(() => {
+          setRoleText(roleText.slice(0, -1));
+        }, 50);
+      } else {
+        // Move to next role and start typing again
+        setIsDeleting(false);
+        setCurrentRoleIndex((prev) => (prev + 1) % roles.length);
+      }
     }
-  }, [roleText, currentRoleIndex]);
+
+    return () => clearTimeout(timer);
+  }, [roleText, isDeleting, currentRoleIndex, nameTypingComplete, roles]);
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);

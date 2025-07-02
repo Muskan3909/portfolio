@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Code } from "lucide-react";
-import profileImage from "@assets/Rudra_20240120_134034_lmc_8.4.PORTRAIT (1)_1751476051723.jpg";
+
+import profileImage from "@assets/image_1749643646112.png";
 
 export default function Hero() {
   const [typedText, setTypedText] = useState("");

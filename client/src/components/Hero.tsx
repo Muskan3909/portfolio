@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Code } from "lucide-react";
-// Replace this with your new image path
-import profileImage from "@assets/your-new-image.jpg";
+import profileImage from "@assets/profile-photo.jpg";
 
 export default function Hero() {
   const [typedText, setTypedText] = useState("");

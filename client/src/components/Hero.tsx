@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Code } from "lucide-react";
-import profileImage from "@assets/Rudra_20240120_134034_lmc_8.4.PORTRAIT (1)_1751474721897.jpg";
+import profileImage from "@assets/Rudra_20240120_134034_lmc_8.4.PORTRAIT (1)_1751476051723.jpg";
 
 export default function Hero() {
   const [typedText, setTypedText] = useState("");
@@ -38,7 +38,7 @@ export default function Hero() {
     if (!nameTypingComplete) return;
 
     const currentRole = roles[currentRoleIndex];
-    let timer;
+     let timer: NodeJS.Timeout;
 
     if (!isDeleting) {
       // Typing phase
